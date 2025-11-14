@@ -5,30 +5,46 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.padding // Importante
+import androidx.compose.material3.* // Importante
+import androidx.compose.runtime.Composable // Importante
 import androidx.compose.ui.Modifier
-import com.idnp2025b.bodega.ui.screens.MainScreen
+import androidx.navigation.compose.rememberNavController
+import com.idnp2025b.bodega.ui.navigation.AppNavigation
 import com.idnp2025b.bodega.ui.theme.BodegaTheme
 import com.idnp2025b.bodega.viewmodel.BodegaViewModel
 import com.idnp2025b.bodega.viewmodel.BodegaViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-    // Inyectamos el ViewModel usando el Factory
     private val viewModel: BodegaViewModel by viewModels {
         BodegaViewModelFactory((application as BodegaApplication).repository)
     }
 
+    // Asegúrate de tener esta anotación para TopAppBar
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BodegaTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // Llamamos a la pantalla principal y le pasamos el ViewModel
-                    MainScreen(viewModel = viewModel)
+                val navController = rememberNavController()
+
+                Scaffold(
+                    topBar = {
+                        TopAppBar(title = { Text("Gestión Bodega") })
+                    }
+                ) { paddingValues -> // <-- LA VARIABLE SE LLAMA 'paddingValues'
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues), // <-- USA 'paddingValues' AQUÍ
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        AppNavigation(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
+                    }
                 }
             }
         }

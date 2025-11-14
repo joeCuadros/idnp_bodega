@@ -1,41 +1,34 @@
 package com.idnp2025b.bodega.data
 
 import com.idnp2025b.bodega.data.dao.BodegaDao
-import com.idnp2025b.bodega.data.entities.Customer
-import com.idnp2025b.bodega.data.entities.CustomerWithOrders
-import com.idnp2025b.bodega.data.entities.FullOrderDetails
-import com.idnp2025b.bodega.data.entities.Product
+import com.idnp2025b.bodega.data.entities.*
 import kotlinx.coroutines.flow.Flow
 
-/**
- * El Repositorio es la única fuente de datos para el ViewModel.
- * Oculta la complejidad de si los datos vienen del DAO o de una red.
- */
 class BodegaRepository(private val bodegaDao: BodegaDao) {
 
-    // --- READ (Flows para la UI) ---
+    // --- READ (Flows) ---
     val allCustomers: Flow<List<Customer>> = bodegaDao.getAllCustomers()
     val allProducts: Flow<List<Product>> = bodegaDao.getAllProducts()
+    val allCategories: Flow<List<Category>> = bodegaDao.getAllCategories()
+    val allOrders: Flow<List<Order>> = bodegaDao.getAllOrders()
 
-    // --- READ (Suspend para obtener datos específicos) ---
-    suspend fun getCustomerWithOrders(id: Int): CustomerWithOrders? {
-        return bodegaDao.getCustomerWithOrders(id)
-    }
+    // --- READ (Suspend) ---
+    suspend fun getCustomerById(id: Int): Customer? = bodegaDao.getCustomerById(id)
+    suspend fun getProductById(id: Int): Product? = bodegaDao.getProductById(id)
+    suspend fun getOrderById(id: Int): Order? = bodegaDao.getOrderById(id)
 
-    suspend fun getFullOrderDetails(id: Int): FullOrderDetails? {
-        return bodegaDao.getFullOrderDetails(id)
-    }
+    // --- CREATE ---
+    suspend fun insertCustomer(customer: Customer) { bodegaDao.insertCustomer(customer) }
+    suspend fun insertProduct(product: Product) { bodegaDao.insertProduct(product) }
+    suspend fun insertOrder(order: Order) { bodegaDao.insertOrder(order) }
 
-    // --- CREATE, UPDATE, DELETE (Suspend functions) ---
-    suspend fun insertCustomer(customer: Customer) {
-        bodegaDao.insertCustomer(customer)
-    }
+    // --- UPDATE ---
+    suspend fun updateCustomer(customer: Customer) { bodegaDao.updateCustomer(customer) }
+    suspend fun updateProduct(product: Product) { bodegaDao.updateProduct(product) }
+    suspend fun updateOrder(order: Order) { bodegaDao.updateOrder(order) }
 
-    suspend fun updateCustomer(customer: Customer) {
-        bodegaDao.updateCustomer(customer)
-    }
-
-    suspend fun deleteCustomer(customer: Customer) {
-        bodegaDao.deleteCustomer(customer)
-    }
+    // --- DELETE ---
+    suspend fun deleteCustomer(customer: Customer) { bodegaDao.deleteCustomer(customer) }
+    suspend fun deleteProduct(product: Product) { bodegaDao.deleteProduct(product) }
+    suspend fun deleteOrder(order: Order) { bodegaDao.deleteOrder(order) }
 }

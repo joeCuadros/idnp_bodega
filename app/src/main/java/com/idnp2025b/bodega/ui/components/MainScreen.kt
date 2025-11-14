@@ -12,13 +12,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.idnp2025b.bodega.data.entities.Customer
+import com.idnp2025b.bodega.data.entities.Product
 import com.idnp2025b.bodega.ui.components.CustomerItem
 import com.idnp2025b.bodega.ui.components.ProductItem
 import com.idnp2025b.bodega.viewmodel.BodegaViewModel
+import com.idnp2025b.bodega.viewmodel.ClientFormState // <-- IMPORTANTE
 
 @Composable
 fun MainScreen(viewModel: BodegaViewModel) {
-    // Colectamos los datos (los 'Flows') como 'State' para que Compose reaccione
     val customers by viewModel.allCustomers.collectAsState()
     val products by viewModel.allProducts.collectAsState()
 
@@ -28,25 +29,27 @@ fun MainScreen(viewModel: BodegaViewModel) {
             .padding(16.dp)
     ) {
         Text("App Bodega (Room)", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // --- Sección de Clientes (con CRUD) ---
         Text("Clientes", fontSize = 22.sp)
 
         Button(
             onClick = {
-                // Ejemplo de CREATE (CRUD)
-                val newId = (customers.maxOfOrNull { it.CustomerID } ?: 0) + 1
-                val randomName = "Cliente $newId"
-                viewModel.insertCustomer(
-                    Customer(
-                        CustomerID = newId,
-                        FirstName = randomName,
-                        LastName = "Test",
-                        Email = "test$newId@email.com"
+
+                val newId = 0 // El ViewModel se encarga del ID si es 0
+                val randomName = "Cliente #${customers.size + 1}"
+
+                // 1. Preparamos el formulario
+                viewModel.updateClientFormState(
+                    ClientFormState(
+                        id = newId,
+                        firstName = randomName,
+                        lastName = "Test",
+                        email = "test${customers.size + 1}@email.com"
                     )
                 )
+
+                // 2. Llamamos a la función que SÍ existe
+                viewModel.saveClient()
             },
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
         ) {
@@ -55,8 +58,6 @@ fun MainScreen(viewModel: BodegaViewModel) {
             Text("Agregar Cliente")
         }
 
-        // Lista de Clientes (READ)
-        // La Carga Inicial de datos aparecerá aquí automáticamente
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,19 +67,17 @@ fun MainScreen(viewModel: BodegaViewModel) {
                 CustomerItem(
                     customer = customer,
                     onDelete = {
-                        // Ejemplo de DELETE (CRUD)
-                        viewModel.deleteCustomer(customer)
+                        // --- CORRECCIÓN PARA 'deleteCustomer' ---
+                        // La función se llama 'deleteClient' en tu ViewModel
+                        viewModel.deleteClient(customer)
                     }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // --- Sección de Productos (Solo READ) ---
         Text("Productos", fontSize = 22.sp)
 
-        // La Carga Inicial de datos aparecerá aquí
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()

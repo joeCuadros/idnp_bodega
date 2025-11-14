@@ -61,5 +61,7 @@ dependencies {
     // ROOM - agrega estas 3
     implementation(libs.room.runtime)   // runtime de Room
     implementation(libs.room.ktx)       // extensiones Kotlin (Flow, coroutines)
-    kapt(libs.room.compiler)             // generador de código (annotation processor)
+    kapt(libs.room.compiler)             // generador de código
+
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 }
