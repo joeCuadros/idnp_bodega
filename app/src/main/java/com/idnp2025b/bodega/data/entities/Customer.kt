@@ -14,7 +14,6 @@ data class Customer(
     val Email: String
 )
 
-// --- Conexión/Relación (1-a-N) ---
 data class CustomerWithOrders(
     @Embedded val customer: Customer,
     @Relation(

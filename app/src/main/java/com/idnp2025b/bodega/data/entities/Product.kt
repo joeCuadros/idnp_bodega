@@ -20,6 +20,6 @@ data class Product(
     @PrimaryKey
     val ProductID: Int,
     val ProductName: String,
-    val Price: Double, // 'decimal' se mapea a Double
+    val Price: Double,
     val CategoryID: Int
 )

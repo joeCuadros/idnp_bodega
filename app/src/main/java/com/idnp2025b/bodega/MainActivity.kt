@@ -3,45 +3,34 @@ package com.idnp2025b.bodega
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.idnp2025b.bodega.ui.screens.MainScreen
 import com.idnp2025b.bodega.ui.theme.BodegaTheme
+import com.idnp2025b.bodega.viewmodel.BodegaViewModel
+import com.idnp2025b.bodega.viewmodel.BodegaViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    // Inyectamos el ViewModel usando el Factory
+    private val viewModel: BodegaViewModel by viewModels {
+        BodegaViewModelFactory((application as BodegaApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             BodegaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    // Llamamos a la pantalla principal y le pasamos el ViewModel
+                    MainScreen(viewModel = viewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BodegaTheme {
-        Greeting("Android")
     }
 }

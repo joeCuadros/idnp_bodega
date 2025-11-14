@@ -24,12 +24,12 @@ data class Order(
     @PrimaryKey
     val OrderID: Int,
     val CustomerID: Int,
-    val OrderDate: Date // Requiere un TypeConverter
+    val OrderDate: Date
 )
 
 @Entity(
     tableName = "OrderDetail",
-    primaryKeys = ["OrderID", "ProductID"], // Clave primaria compuesta
+    primaryKeys = ["OrderID", "ProductID"],
     foreignKeys = [
         ForeignKey(
             entity = Order::class,
@@ -53,10 +53,7 @@ data class OrderDetail(
     val Quantity: Int
 )
 
-
-// --- Conexiones/Relaciones ---
-
-// Conexión N-a-N (Pedido con sus Productos)
+// --- Relaciones ---
 data class OrderWithProducts(
     @Embedded val order: Order,
     @Relation(
@@ -72,7 +69,6 @@ data class OrderWithProducts(
     val products: List<Product>
 )
 
-// Conexión para ver el pedido con el detalle (y la cantidad)
 data class FullOrderDetails(
     @Embedded val order: Order,
     @Relation(
@@ -83,7 +79,6 @@ data class FullOrderDetails(
     val details: List<OrderDetailWithProduct>
 )
 
-// Clase auxiliar para la relación FullOrderDetails
 data class OrderDetailWithProduct(
     @Embedded val orderDetail: OrderDetail,
     @Relation(

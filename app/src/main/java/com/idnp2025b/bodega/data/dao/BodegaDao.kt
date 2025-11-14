@@ -7,79 +7,68 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BodegaDao {
 
-    // --- MÉTODOS DE INSERCIÓN (CREATE) ---
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    // --- CREATE (Insertar) ---
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCustomer(customer: Customer)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(category: Category)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertProduct(product: Product)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrder(order: Order)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrderDetail(orderDetail: OrderDetail)
 
-    // --- Métodos para carga inicial (CREATE Múltiple) ---
+    // Para la carga inicial
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCustomerList(customers: List<Customer>)
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategoryList(categories: List<Category>)
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertProductList(products: List<Product>)
 
-    // (Puedes agregar para Order y OrderDetail si también los pre-cargas)
 
-    // --- MÉTODOS DE CONSULTA (READ) ---
-
-    // Selects simples
-    @Query("SELECT * FROM Customer WHERE CustomerID = :id")
-    suspend fun getCustomerById(id: Int): Customer
-
-    @Query("SELECT * FROM Product WHERE ProductID = :id")
-    suspend fun getProductById(id: Int): Product
-
+    // --- READ (Select) ---
     @Query("SELECT * FROM Customer")
-    fun getAllCustomers(): Flow<List<Customer>> // Flow para UI reactiva
+    fun getAllCustomers(): Flow<List<Customer>>
 
     @Query("SELECT * FROM Product")
     fun getAllProducts(): Flow<List<Product>>
 
-    // Selects de relaciones (1-N y N-M)
+    @Query("SELECT * FROM Customer WHERE CustomerID = :id")
+    suspend fun getCustomerById(id: Int): Customer?
+
+
+    // --- READ (Relaciones 1-N y N-M) ---
     @Transaction
     @Query("SELECT * FROM Customer WHERE CustomerID = :customerId")
-    suspend fun getCustomerWithOrders(customerId: Int): CustomerWithOrders
+    suspend fun getCustomerWithOrders(customerId: Int): CustomerWithOrders?
 
     @Transaction
     @Query("SELECT * FROM Category WHERE CategoryID = :categoryId")
-    suspend fun getCategoryWithProducts(categoryId: Int): CategoryWithProducts
+    suspend fun getCategoryWithProducts(categoryId: Int): CategoryWithProducts?
 
     @Transaction
     @Query("SELECT * FROM `Order` WHERE OrderID = :orderId")
-    suspend fun getFullOrderDetails(orderId: Int): FullOrderDetails
+    suspend fun getFullOrderDetails(orderId: Int): FullOrderDetails?
 
-    // --- MÉTODOS DE ACTUALIZACIÓN (UPDATE) ---
+
+    // --- UPDATE ---
     @Update
     suspend fun updateCustomer(customer: Customer)
 
     @Update
     suspend fun updateProduct(product: Product)
 
-    @Update
-    suspend fun updateOrder(order: Order)
 
-    // --- MÉTODOS DE BORRADO (DELETE) ---
+    // --- DELETE ---
     @Delete
     suspend fun deleteCustomer(customer: Customer)
 
     @Delete
     suspend fun deleteProduct(product: Product)
-
-    @Delete
-    suspend fun deleteOrder(order: Order)
 }

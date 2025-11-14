@@ -8,10 +8,10 @@ import androidx.room.Relation
 @Entity(tableName = "Category")
 data class Category(
     @PrimaryKey
-    val CategoryID: Int
+    val CategoryID: Int,
+    val CategoryName: String // Añadido para que la carga inicial tenga sentido
 )
 
-// --- Conexión/Relación (1-a-N) ---
 data class CategoryWithProducts(
     @Embedded val category: Category,
     @Relation(
