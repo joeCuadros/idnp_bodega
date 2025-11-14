@@ -1,0 +1,85 @@
+package com.idnp2025b.bodega.data.dao
+
+import androidx.room.*
+import com.idnp2025b.bodega.data.entities.*
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface BodegaDao {
+
+    // --- MÉTODOS DE INSERCIÓN (CREATE) ---
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCustomer(customer: Customer)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategory(category: Category)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProduct(product: Product)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrder(order: Order)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrderDetail(orderDetail: OrderDetail)
+
+    // --- Métodos para carga inicial (CREATE Múltiple) ---
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCustomerList(customers: List<Customer>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCategoryList(categories: List<Category>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertProductList(products: List<Product>)
+
+    // (Puedes agregar para Order y OrderDetail si también los pre-cargas)
+
+    // --- MÉTODOS DE CONSULTA (READ) ---
+
+    // Selects simples
+    @Query("SELECT * FROM Customer WHERE CustomerID = :id")
+    suspend fun getCustomerById(id: Int): Customer
+
+    @Query("SELECT * FROM Product WHERE ProductID = :id")
+    suspend fun getProductById(id: Int): Product
+
+    @Query("SELECT * FROM Customer")
+    fun getAllCustomers(): Flow<List<Customer>> // Flow para UI reactiva
+
+    @Query("SELECT * FROM Product")
+    fun getAllProducts(): Flow<List<Product>>
+
+    // Selects de relaciones (1-N y N-M)
+    @Transaction
+    @Query("SELECT * FROM Customer WHERE CustomerID = :customerId")
+    suspend fun getCustomerWithOrders(customerId: Int): CustomerWithOrders
+
+    @Transaction
+    @Query("SELECT * FROM Category WHERE CategoryID = :categoryId")
+    suspend fun getCategoryWithProducts(categoryId: Int): CategoryWithProducts
+
+    @Transaction
+    @Query("SELECT * FROM `Order` WHERE OrderID = :orderId")
+    suspend fun getFullOrderDetails(orderId: Int): FullOrderDetails
+
+    // --- MÉTODOS DE ACTUALIZACIÓN (UPDATE) ---
+    @Update
+    suspend fun updateCustomer(customer: Customer)
+
+    @Update
+    suspend fun updateProduct(product: Product)
+
+    @Update
+    suspend fun updateOrder(order: Order)
+
+    // --- MÉTODOS DE BORRADO (DELETE) ---
+    @Delete
+    suspend fun deleteCustomer(customer: Customer)
+
+    @Delete
+    suspend fun deleteProduct(product: Product)
+
+    @Delete
+    suspend fun deleteOrder(order: Order)
+}
