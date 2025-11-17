@@ -1,0 +1,21 @@
+[
+  {"ProductID": 101, "ProductName": "Inka Kola 1.5L", "Price": 7.50, "CategoryID": 1},
+  {"ProductID": 102, "ProductName": "Coca Cola 1.5L", "Price": 7.20, "CategoryID": 1},
+  {"ProductID": 103, "ProductName": "Gatorade Uva", "Price": 5.50, "CategoryID": 1},
+
+  {"ProductID": 201, "ProductName": "Papas Lays Clasicas", "Price": 3.00, "CategoryID": 2},
+  {"ProductID": 202, "ProductName": "Doritos Mega Queso", "Price": 3.50, "CategoryID": 2},
+  {"ProductID": 203, "ProductName": "KraKets Original", "Price": 2.80, "CategoryID": 2},
+
+  {"ProductID": 301, "ProductName": "Leche Gloria 1L", "Price": 4.20, "CategoryID": 3},
+  {"ProductID": 302, "ProductName": "Yogurt Laive Durazno", "Price": 2.80, "CategoryID": 3},
+  {"ProductID": 303, "ProductName": "Queso Andino", "Price": 6.50, "CategoryID": 3},
+
+  {"ProductID": 401, "ProductName": "Detergente Ace 1kg", "Price": 8.90, "CategoryID": 4},
+  {"ProductID": 402, "ProductName": "Lavavajilla Sapolio", "Price": 3.90, "CategoryID": 4},
+  {"ProductID": 403, "ProductName": "Jabón Bolívar", "Price": 2.50, "CategoryID": 4},
+
+  {"ProductID": 501, "ProductName": "Pan Francés (6 unidades)", "Price": 2.00, "CategoryID": 5},
+  {"ProductID": 502, "ProductName": "Pan de Molde Bimbo", "Price": 6.80, "CategoryID": 5},
+  {"ProductID": 503, "ProductName": "Croissant de Mantequilla", "Price": 3.20, "CategoryID": 5}
+]

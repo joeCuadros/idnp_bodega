@@ -1,0 +1,7 @@
+[
+  {"CustomerID": 1, "FirstName": "Joe", "LastName": "Cuadros", "Email": "joe.cuadros@mail.com"},
+  {"CustomerID": 2, "FirstName": "Misael", "LastName": "Marron", "Email": "misael.marron@mail.com"},
+  {"CustomerID": 3, "FirstName": "Daniel", "LastName": "Marron", "Email": "daniel.marron@mail.com"},
+  {"CustomerID": 4, "FirstName": "Sebastian", "LastName": "Chirinos", "Email": "sebastian.chirinos@mail.com"},
+  {"CustomerID": 5, "FirstName": "Rodrigo", "LastName": "Viza", "Email": "rodrigo.viza@mail.com"}
+]

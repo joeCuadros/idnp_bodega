@@ -1,0 +1,7 @@
+[
+  {"CategoryID": 1, "CategoryName": "Bebidas"},
+  {"CategoryID": 2, "CategoryName": "Snacks"},
+  {"CategoryID": 3, "CategoryName": "Lácteos"},
+  {"CategoryID": 4, "CategoryName": "Limpieza"},
+  {"CategoryID": 5, "CategoryName": "Panadería"}
+]
