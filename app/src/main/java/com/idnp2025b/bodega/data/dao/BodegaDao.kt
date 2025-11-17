@@ -16,6 +16,8 @@ interface BodegaDao {
     suspend fun insertProduct(product: Product)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrder(order: Order)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertOrderDetail(detail: OrderDetail)
 
     // --- Para la carga inicial ---
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -60,6 +62,8 @@ interface BodegaDao {
     suspend fun updateProduct(product: Product)
     @Update
     suspend fun updateOrder(order: Order)
+    @Update
+    suspend fun updateOrderDetail(detail: OrderDetail)
 
     // --- DELETE ---
     @Delete
@@ -68,4 +72,6 @@ interface BodegaDao {
     suspend fun deleteProduct(product: Product)
     @Delete
     suspend fun deleteOrder(order: Order)
+    @Delete
+    suspend fun deleteOrderDetail(detail: OrderDetail)
 }

@@ -78,8 +78,8 @@ abstract class BodegaDatabase : RoomDatabase() {
             dao.insertProductList(products)
 
             val customers = listOf(
-                Customer(CustomerID = 1, FirstName = "Juan", LastName = "Perez", Email = "juan@email.com"),
-                Customer(CustomerID = 2, FirstName = "Maria", LastName = "Lopez", Email = "maria@email.com")
+                Customer(CustomerID = 1, FirstName = "Joe", LastName = "Cuadros", Email = "joe@email.com"),
+                Customer(CustomerID = 2, FirstName = "Misael", LastName = "Marron", Email = "misael@email.com")
             )
             dao.insertCustomerList(customers)
         }

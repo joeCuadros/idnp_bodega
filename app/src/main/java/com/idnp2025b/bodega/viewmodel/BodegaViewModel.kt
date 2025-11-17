@@ -53,7 +53,12 @@ class BodegaViewModel(private val repository: BodegaRepository) : ViewModel() {
     var orderFormState by mutableStateOf(OrderFormState())
         private set
 
+    // --- NUEVO ESTADO: DETALLES DEL PEDIDO ACTUAL ---
+    private val _currentFullOrderDetails = MutableStateFlow<FullOrderDetails?>(null)
+    val currentFullOrderDetails: StateFlow<FullOrderDetails?> = _currentFullOrderDetails.asStateFlow()
+
     // --- LÓGICA DE CLIENTES (CRUD) ---
+    // ... (Tu código de Clientes va aquí, no cambia)
     fun loadClient(id: Int) {
         viewModelScope.launch {
             val client = repository.getCustomerById(id) ?: ClientFormState().let {
@@ -75,13 +80,11 @@ class BodegaViewModel(private val repository: BodegaRepository) : ViewModel() {
             LastName = clientFormState.lastName,
             Email = clientFormState.email
         )
-        if (client.CustomerID == 0) { // ID 0 significa NUEVO
-            // Simular autoincremento (Room no lo hace con ID 0, lo haría con @Insert)
-            // Esto es una simplificación, idealmente el ID sería autogenerado en la Entidad
+        if (client.CustomerID == 0) {
             val newId = (allCustomers.value.maxOfOrNull { it.CustomerID } ?: 0) + 1
             repository.insertCustomer(client.copy(CustomerID = newId))
         } else {
-            repository.updateCustomer(client) // ID existente, ACTUALIZAR
+            repository.updateCustomer(client)
         }
     }
     fun deleteClient(customer: Customer) = viewModelScope.launch {
@@ -89,6 +92,7 @@ class BodegaViewModel(private val repository: BodegaRepository) : ViewModel() {
     }
 
     // --- LÓGICA DE PRODUCTOS (CRUD) ---
+    // ... (Tu código de Productos va aquí, no cambia)
     fun loadProduct(id: Int) {
         viewModelScope.launch {
             val product = repository.getProductById(id) ?: ProductFormState().let {
@@ -124,14 +128,23 @@ class BodegaViewModel(private val repository: BodegaRepository) : ViewModel() {
     // --- LÓGICA DE PEDIDOS (CRUD) ---
     fun loadOrder(id: Int) {
         viewModelScope.launch {
-            val order = repository.getOrderById(id) ?: OrderFormState().let {
-                Order(it.id, it.customerId, it.date)
+            if (id == 0) {
+                // Es un pedido nuevo, limpiamos el estado
+                orderFormState = OrderFormState()
+                _currentFullOrderDetails.value = null
+            } else {
+                // Es un pedido existente, cargamos todo
+                val order = repository.getOrderById(id) ?: OrderFormState().let {
+                    Order(it.id, it.customerId, it.date)
+                }
+                orderFormState = OrderFormState(
+                    id = order.OrderID,
+                    customerId = order.CustomerID,
+                    date = order.OrderDate
+                )
+                // Cargamos también los detalles (productos)
+                _currentFullOrderDetails.value = repository.getFullOrderDetails(id)
             }
-            orderFormState = OrderFormState(
-                id = order.OrderID,
-                customerId = order.CustomerID,
-                date = order.OrderDate
-            )
         }
     }
     fun updateOrderFormState(state: OrderFormState) { orderFormState = state }
@@ -139,17 +152,46 @@ class BodegaViewModel(private val repository: BodegaRepository) : ViewModel() {
         val order = Order(
             OrderID = orderFormState.id,
             CustomerID = orderFormState.customerId,
-            OrderDate = orderFormState.date // Para "Crear" usamos la fecha actual
+            OrderDate = orderFormState.date
         )
         if (order.OrderID == 0) {
             val newId = (allOrders.value.maxOfOrNull { it.OrderID } ?: 0) + 1
-            repository.insertOrder(order.copy(OrderID = newId, OrderDate = Date())) // Pone fecha actual al crear
+            repository.insertOrder(order.copy(OrderID = newId, OrderDate = Date()))
         } else {
-            repository.updateOrder(order) // Actualiza (mantiene fecha original)
+            repository.updateOrder(order)
         }
     }
     fun deleteOrder(order: Order) = viewModelScope.launch {
         repository.deleteOrder(order)
+    }
+
+    // --- NUEVA LÓGICA: CRUD DE OrderDetail ---
+
+    /** Añade un producto al pedido actual y refresca la lista de detalles */
+    fun addProductToCurrentOrder(productId: Int, quantity: Int) {
+        val orderId = orderFormState.id
+        // Solo podemos añadir productos a un pedido que ya existe (ID != 0)
+        if (orderId != 0 && quantity > 0) {
+            viewModelScope.launch {
+                val detail = OrderDetail(
+                    OrderID = orderId,
+                    ProductID = productId,
+                    Quantity = quantity
+                )
+                repository.insertOrderDetail(detail)
+                // Refrescamos la lista de productos
+                loadOrder(orderId)
+            }
+        }
+    }
+
+    /** Elimina un producto del pedido actual y refresca la lista de detalles */
+    fun removeProductFromCurrentOrder(detail: OrderDetail) {
+        viewModelScope.launch {
+            repository.deleteOrderDetail(detail)
+            // Refrescamos la lista de productos
+            loadOrder(detail.OrderID)
+        }
     }
 
     // Limpia el estado del formulario al salir
@@ -157,6 +199,7 @@ class BodegaViewModel(private val repository: BodegaRepository) : ViewModel() {
         clientFormState = ClientFormState()
         productFormState = ProductFormState()
         orderFormState = OrderFormState()
+        _currentFullOrderDetails.value = null // ¡Importante!
     }
 }
 

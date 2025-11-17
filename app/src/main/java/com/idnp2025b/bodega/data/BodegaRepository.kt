@@ -21,14 +21,16 @@ class BodegaRepository(private val bodegaDao: BodegaDao) {
     suspend fun insertCustomer(customer: Customer) { bodegaDao.insertCustomer(customer) }
     suspend fun insertProduct(product: Product) { bodegaDao.insertProduct(product) }
     suspend fun insertOrder(order: Order) { bodegaDao.insertOrder(order) }
-
+    suspend fun insertOrderDetail(detail: OrderDetail) { bodegaDao.insertOrderDetail(detail) }
     // --- UPDATE ---
     suspend fun updateCustomer(customer: Customer) { bodegaDao.updateCustomer(customer) }
     suspend fun updateProduct(product: Product) { bodegaDao.updateProduct(product) }
     suspend fun updateOrder(order: Order) { bodegaDao.updateOrder(order) }
-
+    suspend fun updateOrderDetail(detail: OrderDetail) { bodegaDao.updateOrderDetail(detail) }
     // --- DELETE ---
     suspend fun deleteCustomer(customer: Customer) { bodegaDao.deleteCustomer(customer) }
     suspend fun deleteProduct(product: Product) { bodegaDao.deleteProduct(product) }
     suspend fun deleteOrder(order: Order) { bodegaDao.deleteOrder(order) }
+    suspend fun deleteOrderDetail(detail: OrderDetail) { bodegaDao.deleteOrderDetail(detail) }
+    suspend fun getFullOrderDetails(orderId: Int): FullOrderDetails? { return bodegaDao.getFullOrderDetails(orderId) }
 }
